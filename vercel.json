@@ -1,27 +1,19 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/admin/(.*)",
-      "headers": { "X-Robots-Tag": "noindex" },
-      "continue": true
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/src/pages/index.html"
-    }
-  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/src/pages/index.html" },
-    { "source": "/items", "destination": "/src/pages/items.html" },
-    { "source": "/items/:id", "destination": "/src/pages/item-detail.html" },
-    { "source": "/admin", "destination": "/src/pages/admin-login.html" },
-    { "source": "/admin/dashboard", "destination": "/src/pages/admin-dashboard.html" },
-    { "source": "/admin/products", "destination": "/src/pages/admin-products.html" },
-    { "source": "/admin/stock", "destination": "/src/pages/admin-stock.html" },
-    { "source": "/admin/orders", "destination": "/src/pages/admin-orders.html" }
-  ]
-}
+    { "source": "/items", "destination": "items.html" },
+    { "source": "/items/:id", "destination": "item-detail.html" },
+    { "source": "/admin", "destination": "admin-login.html" },
+    { "source": "/admin/dashboard", "destination": "admin-dashboard.html" },
+    { "source": "/admin/products", "destination": "admin-products.html" },
+    { "source": "/admin/stock", "destination": "admin-stock.html" },
+    { "source": "/admin/orders", "destination": "admin-orders.html" }
+  ],
+    "headers": [
+      {
+        "source": "/admin-(.*)",
+        "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      }
+    ]
+  }
