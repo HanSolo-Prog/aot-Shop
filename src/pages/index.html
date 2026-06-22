@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AOT Revolution Store — Official Attack on Titan merchandise. Figures, apparel, accessories, and collectibles.">
+  <meta property="og:title" content="AOT Revolution Store">
+  <meta property="og:description" content="Gear up. Fight to live. Official AOT merchandise.">
+  <meta property="og:type" content="website">
+  <title>AOT Revolution Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="../styles/globals.css">
+  <style>
+    /* Page-specific: featured grid */
+    .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .featured-grid .product-card:first-child { grid-column: span 2; }
+    .featured-grid .product-card:first-child .product-card-img { aspect-ratio: 2/1; }
+
+    /* CTA section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--black-mid) 0%, #0d0d0d 100%);
+      border: 1px solid var(--gray-mid);
+      padding: 80px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border: 1px solid rgba(212,175,55,0.1);
+      border-radius: 50%;
+    }
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 400px; height: 400px;
+      border: 1px solid rgba(212,175,55,0.06);
+      border-radius: 50%;
+    }
+    .cta-section h2 { margin-bottom: 16px; }
+    .cta-section p { color: var(--text-dim); margin-bottom: 32px; font-size: 15px; }
+
+    /* Marquee */
+    .marquee-wrap { overflow: hidden; border-top: 1px solid var(--gray-mid); border-bottom: 1px solid var(--gray-mid); padding: 16px 0; background: var(--black-mid); }
+    .marquee { display: flex; gap: 48px; animation: marquee 20s linear infinite; white-space: nowrap; }
+    .marquee span { font-family: var(--font-display); font-size: 0.95rem; letter-spacing: 0.15em; color: var(--text-muted); }
+    .marquee span em { color: var(--gold); font-style: normal; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* Category pills */
+    .cat-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .cat-pill {
+      padding: 8px 20px;
+      border: 1px solid var(--gray-mid);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: all 0.2s;
+    }
+    .cat-pill:hover { border-color: var(--gold); color: var(--gold); }
+
+    @media (max-width: 768px) {
+      .featured-grid { grid-template-columns: 1fr; }
+      .featured-grid .product-card:first-child { grid-column: span 1; }
+      .featured-grid .product-card:first-child .product-card-img { aspect-ratio: 1; }
+      .cta-section { padding: 48px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">AOT<span>REVOLUTION</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="items.html" class="nav-link">Items</a>
+      <a href="items.html?category=Apparel" class="nav-link">Apparel</a>
+      <a href="items.html?category=Merch" class="nav-link">Merch</a>
+      <a href="items.html?category=Accessories" class="nav-link">Accessories</a>
+    </div>
+    <a href="items.html" class="btn btn-primary btn-sm nav-cta">Shop Now</a>
+    <button class="nav-mobile-toggle" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="mobile-nav">
+  <a href="index.html" class="nav-link active">Home</a>
+  <a href="items.html" class="nav-link">All Items</a>
+  <a href="items.html?category=Apparel" class="nav-link">Apparel</a>
+  <a href="items.html?category=Merch" class="nav-link">Merch</a>
+  <a href="items.html?category=Accessories" class="nav-link">Accessories</a>
+  <a href="items.html" class="btn btn-primary btn-sm" style="width:fit-content">Shop Now</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="container hero-content">
+    <div class="hero-eyebrow">Official AOT Merchandise</div>
+    <h1 class="hero-title">
+      GEAR UP.<br>
+      FIGHT TO <em>LIVE.</em>
+    </h1>
+    <p class="hero-sub">
+      Premium Attack on Titan merchandise — figures, apparel, collectibles, and limited editions. Message us directly on Facebook to order.
+    </p>
+    <div class="hero-actions">
+      <a href="items.html" class="btn btn-primary btn-lg">Browse All Items</a>
+      <a href="#featured" class="btn btn-outline btn-lg">Featured ↓</a>
+    </div>
+  </div>
+  <div class="hero-stats container">
+    <div class="hero-stats-inner">
+      <div>
+        <div class="hero-stat-num">200+</div>
+        <div class="hero-stat-label">Items Available</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">Fast</div>
+        <div class="hero-stat-label">Ships Nationwide</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">FB</div>
+        <div class="hero-stat-label">Direct Ordering</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee" id="marquee-inner">
+    <span>SURVEY CORPS</span>
+    <span>·</span>
+    <span><em>ODM GEAR</em></span>
+    <span>·</span>
+    <span>WALL MARIA</span>
+    <span>·</span>
+    <span><em>WINGS OF FREEDOM</em></span>
+    <span>·</span>
+    <span>PARADIS ISLAND</span>
+    <span>·</span>
+    <span><em>THE RUMBLING</em></span>
+    <span>·</span>
+    <span>COLOSSUS TITAN</span>
+    <span>·</span>
+    <span>SURVEY CORPS</span>
+    <span>·</span>
+    <span><em>ODM GEAR</em></span>
+    <span>·</span>
+    <span>WALL MARIA</span>
+    <span>·</span>
+    <span><em>WINGS OF FREEDOM</em></span>
+    <span>·</span>
+    <span>PARADIS ISLAND</span>
+    <span>·</span>
+    <span><em>THE RUMBLING</em></span>
+    <span>·</span>
+    <span>COLOSSUS TITAN</span>
+    <span>·</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div class="section-eyebrow">Browse By</div>
+        <h2>Categories</h2>
+      </div>
+    </div>
+    <div class="cat-pills">
+      <a href="items.html" class="cat-pill">All Items</a>
+      <a href="items.html?category=Apparel" class="cat-pill">Apparel</a>
+      <a href="items.html?category=Merch" class="cat-pill">Merch</a>
+      <a href="items.html?category=Accessories" class="cat-pill">Accessories</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section" id="featured" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div class="section-eyebrow">Hand-picked</div>
+        <h2>Featured Items</h2>
+      </div>
+      <a href="items.html" class="btn btn-ghost btn-sm">View All →</a>
+    </div>
+    <div class="featured-grid" id="featured-grid">
+      <!-- Skeleton loading -->
+      <div class="product-card"><div class="product-card-img skeleton" style="aspect-ratio:2/1"></div><div class="product-card-body"><div class="skeleton" style="height:14px;width:60%;margin-bottom:8px"></div><div class="skeleton" style="height:20px;width:80%"></div></div></div>
+      <div class="product-card"><div class="product-card-img skeleton"></div><div class="product-card-body"><div class="skeleton" style="height:14px;width:60%;margin-bottom:8px"></div><div class="skeleton" style="height:20px;width:80%"></div></div></div>
+      <div class="product-card"><div class="product-card-img skeleton"></div><div class="product-card-body"><div class="skeleton" style="height:14px;width:60%;margin-bottom:8px"></div><div class="skeleton" style="height:20px;width:80%"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-strip">
+  <div class="container stats-strip-inner">
+    <div class="stat-item">
+      <div class="stat-num">200+</div>
+      <div class="stat-label">Products</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Orders Shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">FB</div>
+      <div class="stat-label">Direct Ordering</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="section">
+  <div class="container">
+    <div class="cta-section">
+      <div class="section-eyebrow" style="justify-content:center;display:block;margin-bottom:12px;">Ready to Order?</div>
+      <h2>Find Your Next<br><em style="color:var(--gold);font-style:normal;">Titan-Level</em> Piece</h2>
+      <p>Browse our full catalog and message us on Facebook to place your order. Fast shipping nationwide.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="items.html" class="btn btn-primary btn-lg">Explore All Items</a>
+        <a href="https://facebook.com/YOUR_PAGE" target="_blank" rel="noopener" class="btn btn-outline btn-lg">Message on FB</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:1.4rem;">AOT<span style="color:var(--text)">REVOLUTION</span></div>
+        <p>Official Attack on Titan merchandise store. Premium quality figures, apparel, and collectibles. Order directly through Facebook Messenger.</p>
+        <div class="social-links" style="margin-top:20px;">
+          <a href="https://facebook.com/YOUR_PAGE" target="_blank" class="social-link" title="Facebook">f</a>
+          <a href="https://instagram.com/YOUR_HANDLE" target="_blank" class="social-link" title="Instagram">in</a>
+          <a href="https://m.me/YOUR_PAGE_ID" target="_blank" class="social-link" title="Messenger">✉</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Shop</div>
+        <div class="footer-links">
+          <a href="items.html">All Items</a>
+          <a href="items.html?category=Apparel">Apparel</a>
+          <a href="items.html?category=Merch">Merch</a>
+          <a href="items.html?category=Accessories">Accessories</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Info</div>
+        <div class="footer-links">
+          <a href="https://m.me/YOUR_PAGE_ID" target="_blank">How to Order</a>
+          <a href="https://facebook.com/YOUR_PAGE" target="_blank">Facebook Page</a>
+          <a href="mailto:hello@aot.store">Contact Us</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2024 AOT Revolution Store. All rights reserved.</span>
+      <span class="footer-copy" style="color:var(--text-muted);font-size:11px;">Design: black × gold</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="../config/supabase.js"></script>
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobile-nav').classList.toggle('open');
+  }
+
+  async function loadFeatured() {
+    const { data } = await API.getFeatured();
+    const grid = document.getElementById('featured-grid');
+    if (!data || data.length === 0) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>No featured products yet.</p></div>';
+      return;
+    }
+    grid.innerHTML = data.slice(0, 6).map((p, i) => {
+      const stock = Utils.stockStatus(p.stock_quantity);
+      return `
+        <div class="product-card" onclick="location.href='item-detail.html?id=${p.id}'">
+          <div class="product-card-img">
+            <img src="${p.image_url}" alt="${p.name}" loading="${i > 1 ? 'lazy' : 'eager'}">
+            <span class="badge ${stock.badge}">${stock.text}</span>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-cat">${p.category}</div>
+            <div class="product-card-name">${p.name}</div>
+            <div class="product-card-footer">
+              <span class="product-card-price">${Utils.formatPrice(p.price)}</span>
+              <span class="btn btn-primary btn-sm">View</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  loadFeatured();
+</script>
+</body>
+</html>

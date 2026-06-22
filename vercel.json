@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/admin/(.*)",
+      "headers": { "X-Robots-Tag": "noindex" },
+      "continue": true
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/src/pages/404.html"
+    }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/src/pages/index.html" },
+    { "source": "/items", "destination": "/src/pages/items.html" },
+    { "source": "/items/:id", "destination": "/src/pages/item-detail.html" },
+    { "source": "/admin", "destination": "/src/pages/admin-login.html" },
+    { "source": "/admin/dashboard", "destination": "/src/pages/admin-dashboard.html" },
+    { "source": "/admin/products", "destination": "/src/pages/admin-products.html" },
+    { "source": "/admin/stock", "destination": "/src/pages/admin-stock.html" },
+    { "source": "/admin/orders", "destination": "/src/pages/admin-orders.html" }
+  ]
+}

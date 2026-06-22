@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock — AOT Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="../styles/globals.css">
+  <style>
+    .stock-input-wrap { display: flex; gap: 6px; align-items: center; }
+    .stock-input-wrap input { width: 80px; padding: 6px 10px; background: var(--black-mid); border: 1px solid var(--gray-mid); color: var(--text); font-size: 13px; text-align: center; outline: none; }
+    .stock-input-wrap input:focus { border-color: var(--gold); }
+    .stock-bar-visual { height: 4px; background: var(--gray-mid); margin-top: 4px; }
+    .stock-bar-fill { height: 100%; transition: width 0.3s; }
+  </style>
+</head>
+<body>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-logo">
+      <div class="logo-text">AOT ADMIN</div>
+      <div class="logo-sub">Control Panel</div>
+    </div>
+    <nav>
+      <a href="admin-dashboard.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="admin-products.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+        Products
+      </a>
+      <a href="admin-stock.html" class="admin-nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+        Stock
+      </a>
+      <a href="admin-orders.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Orders
+      </a>
+      <div style="height:1px;background:var(--gray-mid);margin:16px 0;"></div>
+      <a href="index.html" class="admin-nav-item" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Store
+      </a>
+      <button class="admin-nav-item" onclick="API.adminLogout();location.href='admin-login.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Stock Management</h1>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:4px;">Update inventory levels per product</p>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text-dim);">
+          <input type="checkbox" id="show-alerts" onchange="renderTable()" style="accent-color:var(--gold);">
+          Alerts only
+        </label>
+      </div>
+    </div>
+
+    <!-- ALERTS SUMMARY -->
+    <div id="alerts-bar" style="display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;"></div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Current Stock</th>
+            <th>Status</th>
+            <th>Adjust Qty</th>
+            <th>Save</th>
+          </tr>
+        </thead>
+        <tbody id="stock-tbody">
+          <tr><td colspan="6"><div class="skeleton" style="height:50px;margin:4px 0;"></div></td></tr>
+          <tr><td colspan="6"><div class="skeleton" style="height:50px;margin:4px 0;"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="../config/supabase.js"></script>
+<script>
+  if (!Utils.requireAdmin()) {}
+  let products = [];
+
+  async function load() {
+    const { data } = await API.getProducts();
+    products = data || [];
+    renderAlerts();
+    renderTable();
+  }
+
+  function renderAlerts() {
+    const low = products.filter(p => p.stock_quantity > 0 && p.stock_quantity <= 5);
+    const out = products.filter(p => p.stock_quantity === 0);
+    const bar = document.getElementById('alerts-bar');
+    bar.innerHTML = '';
+    if (out.length > 0) bar.innerHTML += `<div style="padding:10px 16px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);font-size:12px;color:var(--danger);">⚠ ${out.length} item${out.length>1?'s':''} out of stock</div>`;
+    if (low.length > 0) bar.innerHTML += `<div style="padding:10px 16px;background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.3);font-size:12px;color:var(--warning);">⚠ ${low.length} item${low.length>1?'s':''} running low</div>`;
+    if (low.length === 0 && out.length === 0) bar.innerHTML = `<div style="padding:10px 16px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);font-size:12px;color:var(--success);">✓ All items well-stocked</div>`;
+  }
+
+  function renderTable() {
+    const alertsOnly = document.getElementById('show-alerts').checked;
+    let filtered = alertsOnly ? products.filter(p => p.stock_quantity <= 5) : products;
+    const tbody = document.getElementById('stock-tbody');
+    tbody.innerHTML = filtered.map(p => {
+      const stock = Utils.stockStatus(p.stock_quantity);
+      const maxStock = 50;
+      const fillPct = Math.min(100, (p.stock_quantity / maxStock) * 100);
+      const fillColor = p.stock_quantity === 0 ? 'var(--danger)' : p.stock_quantity <= 5 ? 'var(--warning)' : 'var(--success)';
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <img src="${p.image_url}" alt="" style="width:36px;height:36px;object-fit:cover;border:1px solid var(--gray-mid);flex-shrink:0;">
+              <span style="font-size:13px;font-weight:500;">${p.name}</span>
+            </div>
+          </td>
+          <td style="font-size:12px;color:var(--text-dim);">${p.category}</td>
+          <td>
+            <div style="font-family:var(--font-mono);font-size:1.1rem;color:${fillColor};">${p.stock_quantity}</div>
+            <div class="stock-bar-visual" style="width:80px;"><div class="stock-bar-fill" style="width:${fillPct}%;background:${fillColor};"></div></div>
+          </td>
+          <td><span class="badge ${stock.badge}">${stock.text}</span></td>
+          <td>
+            <div class="stock-input-wrap">
+              <button onclick="adjustInput('${p.id}',-1)" style="width:28px;height:28px;border:1px solid var(--gray-mid);background:var(--black-mid);color:var(--gold);font-size:16px;display:flex;align-items:center;justify-content:center;">−</button>
+              <input type="number" id="stock-input-${p.id}" value="${p.stock_quantity}" min="0">
+              <button onclick="adjustInput('${p.id}',1)" style="width:28px;height:28px;border:1px solid var(--gray-mid);background:var(--black-mid);color:var(--gold);font-size:16px;display:flex;align-items:center;justify-content:center;">+</button>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm" onclick="saveStock('${p.id}')">Update</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function adjustInput(id, delta) {
+    const input = document.getElementById(`stock-input-${id}`);
+    input.value = Math.max(0, parseInt(input.value || 0) + delta);
+  }
+
+  async function saveStock(id) {
+    const input = document.getElementById(`stock-input-${id}`);
+    const qty = parseInt(input.value);
+    if (isNaN(qty) || qty < 0) { Utils.toast('Invalid quantity', 'error'); return; }
+    await API.updateProduct(id, { stock_quantity: qty });
+    const product = products.find(p => p.id === id);
+    if (product) product.stock_quantity = qty;
+    Utils.toast('Stock updated!', 'success');
+    renderAlerts();
+    renderTable();
+  }
+
+  load();
+</script>
+</body>
+</html>

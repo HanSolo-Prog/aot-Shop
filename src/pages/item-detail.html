@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item — AOT Revolution Store</title>
+  <link rel="stylesheet" href="../styles/globals.css">
+  <style>
+    .page-body { padding-top: calc(var(--nav-h) + 48px); padding-bottom: 80px; }
+    .detail-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .detail-category { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+    .detail-actions { display: flex; flex-direction: column; gap: 12px; }
+    .stock-bar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--gray-dark); border: 1px solid var(--gray-mid); font-size: 13px; margin-bottom: 20px; }
+    .stock-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .stock-dot.in { background: var(--success); }
+    .stock-dot.low { background: var(--warning); }
+    .stock-dot.out { background: var(--text-muted); }
+    .how-to-order { background: var(--gray-dark); border: 1px solid var(--gray-mid); padding: 20px; margin-top: 20px; }
+    .how-to-order-title { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+    .how-to-order-steps { display: flex; flex-direction: column; gap: 8px; }
+    .how-step { display: flex; gap: 12px; font-size: 13px; color: var(--text-dim); }
+    .how-step-num { font-family: var(--font-mono); font-size: 10px; color: var(--gold); padding-top: 2px; flex-shrink: 0; }
+    .related-section { padding: 64px 0; border-top: 1px solid var(--gray-mid); }
+    .detail-name { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+
+    /* Carousel nav arrows */
+    .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: 1px solid var(--gray-mid); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text); z-index: 5; transition: border-color 0.2s; }
+    .carousel-nav:hover { border-color: var(--gold); color: var(--gold); }
+    .carousel-prev { left: 12px; }
+    .carousel-next { right: 12px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">AOT<span>REVOLUTION</span></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="items.html" class="nav-link">Items</a>
+    </div>
+    <a href="items.html" class="btn btn-primary btn-sm nav-cta">Browse All</a>
+    <button class="nav-mobile-toggle" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="mobile-nav">
+  <a href="index.html" class="nav-link">Home</a>
+  <a href="items.html" class="nav-link">All Items</a>
+</div>
+
+<div class="page-body">
+  <div class="container">
+    <div class="breadcrumb" id="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="items.html">Items</a>
+      <span>/</span>
+      <span id="breadcrumb-name">Loading...</span>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loading" class="detail-layout">
+      <div class="skeleton" style="aspect-ratio:1;width:100%"></div>
+      <div>
+        <div class="skeleton" style="height:14px;width:30%;margin-bottom:16px"></div>
+        <div class="skeleton" style="height:40px;width:80%;margin-bottom:16px"></div>
+        <div class="skeleton" style="height:30px;width:25%;margin-bottom:24px"></div>
+        <div class="skeleton" style="height:80px;width:100%;margin-bottom:24px"></div>
+        <div class="skeleton" style="height:48px;width:100%"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT DETAIL -->
+    <div id="product-detail" style="display:none">
+      <div class="detail-layout">
+        <!-- IMAGE CAROUSEL -->
+        <div class="carousel">
+          <div class="carousel-main" style="position:relative;">
+            <img id="main-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+            <button class="carousel-nav carousel-prev" id="carousel-prev" onclick="prevImg()">‹</button>
+            <button class="carousel-nav carousel-next" id="carousel-next" onclick="nextImg()">›</button>
+          </div>
+          <div class="carousel-thumbs" id="carousel-thumbs"></div>
+        </div>
+
+        <!-- PRODUCT INFO -->
+        <div>
+          <div class="detail-meta">
+            <span class="detail-category" id="d-cat"></span>
+            <span class="badge" id="d-badge"></span>
+          </div>
+          <h1 class="detail-name" id="d-name"></h1>
+          <div class="detail-price" id="d-price"></div>
+
+          <div class="stock-bar" id="stock-bar">
+            <div class="stock-dot" id="stock-dot"></div>
+            <span id="stock-text"></span>
+          </div>
+
+          <p class="detail-desc" id="d-desc"></p>
+
+          <div id="order-section">
+            <div style="margin-bottom:16px;">
+              <label class="label">Quantity</label>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                <span class="qty-num" id="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+              </div>
+            </div>
+
+            <div class="detail-actions">
+              <a id="messenger-btn" href="#" target="_blank" rel="noopener" class="messenger-cta">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.822 1.337 5.345 3.443 7.038V22l3.145-1.727A10.98 10.98 0 0 0 12 20.485c5.523 0 10-4.144 10-9.242C22 6.145 17.523 2 12 2zm1.033 12.432L10.69 11.82l-4.595 2.61 5.052-5.378 2.393 2.612 4.543-2.612-5.05 5.38z"/></svg>
+                Message to Order on Facebook
+              </a>
+              <a href="items.html" class="btn btn-ghost" style="justify-content:center;text-align:center;">← Continue Browsing</a>
+            </div>
+          </div>
+
+          <div class="how-to-order">
+            <div class="how-to-order-title">How to Order</div>
+            <div class="how-to-order-steps">
+              <div class="how-step"><span class="how-step-num">01</span><span>Click "Message to Order" above</span></div>
+              <div class="how-step"><span class="how-step-num">02</span><span>Send us the item name and your quantity</span></div>
+              <div class="how-step"><span class="how-step-num">03</span><span>We'll confirm availability and shipping details</span></div>
+              <div class="how-step"><span class="how-step-num">04</span><span>Pay and your order ships within 1-3 days</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 404 -->
+    <div id="not-found" style="display:none" class="empty-state" style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <div class="empty-state-icon">⚔</div>
+      <h3>Item Not Found</h3>
+      <p>This item may have been removed or doesn't exist.</p>
+      <a href="items.html" class="btn btn-outline" style="margin-top:20px;">Browse All Items</a>
+    </div>
+  </div>
+
+  <!-- RELATED ITEMS -->
+  <div class="related-section" id="related-section" style="display:none;">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">You might also like</div>
+        <h2>Related Items</h2>
+      </div>
+      <div class="product-grid" id="related-grid" style="grid-template-columns:repeat(4,1fr)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid var(--gray-mid);padding-top:24px;">
+      <span class="footer-copy">© 2024 AOT Revolution Store</span>
+      <a href="items.html" style="font-size:12px;color:var(--text-dim);">← Back to Items</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="../config/supabase.js"></script>
+<script>
+  let product = null;
+  let currentImgIdx = 0;
+  let qty = 1;
+
+  function toggleMobileNav() {
+    document.getElementById('mobile-nav').classList.toggle('open');
+  }
+
+  function setMainImg(idx) {
+    currentImgIdx = idx;
+    const imgs = product.images || [product.image_url];
+    document.getElementById('main-img').src = imgs[idx];
+    document.getElementById('main-img').alt = product.name;
+    document.querySelectorAll('.carousel-thumb').forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
+    // show/hide arrows
+    document.getElementById('carousel-prev').style.display = idx === 0 ? 'none' : 'flex';
+    document.getElementById('carousel-next').style.display = idx === imgs.length - 1 ? 'none' : 'flex';
+  }
+
+  function prevImg() { if (currentImgIdx > 0) setMainImg(currentImgIdx - 1); }
+  function nextImg() {
+    const imgs = product.images || [product.image_url];
+    if (currentImgIdx < imgs.length - 1) setMainImg(currentImgIdx + 1);
+  }
+
+  function changeQty(delta) {
+    const max = product.stock_quantity || 1;
+    qty = Math.max(1, Math.min(max, qty + delta));
+    document.getElementById('qty-num').textContent = qty;
+    updateMessengerLink();
+  }
+
+  function updateMessengerLink() {
+    const msg = encodeURIComponent(`Hi! I'd like to order:\n\nItem: ${product.name}\nQty: ${qty}\nPrice: ${Utils.formatPrice(product.price * qty)}\n\nPlease let me know availability and shipping details. Thank you!`);
+    document.getElementById('messenger-btn').href = `${FB_MESSENGER_URL}?text=${msg}`;
+  }
+
+  async function loadProduct() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (!id) { showNotFound(); return; }
+
+    const { data } = await API.getProduct(id);
+    if (!data) { showNotFound(); return; }
+    product = data;
+
+    // Update page meta
+    document.title = `${product.name} — AOT Revolution Store`;
+    document.getElementById('breadcrumb-name').textContent = product.name;
+
+    // Images
+    const imgs = product.images || [product.image_url];
+    const thumbsEl = document.getElementById('carousel-thumbs');
+    thumbsEl.innerHTML = imgs.map((src, i) => `
+      <div class="carousel-thumb ${i === 0 ? 'active' : ''}" onclick="setMainImg(${i})">
+        <img src="${src}" alt="${product.name} ${i+1}">
+      </div>
+    `).join('');
+    setMainImg(0);
+
+    // Info
+    document.getElementById('d-cat').textContent = product.category;
+    document.getElementById('d-name').textContent = product.name;
+    document.getElementById('d-price').textContent = Utils.formatPrice(product.price);
+    document.getElementById('d-desc').textContent = product.description;
+
+    // Stock
+    const stock = Utils.stockStatus(product.stock_quantity);
+    const dot = document.getElementById('stock-dot');
+    dot.className = `stock-dot ${stock.cls}`;
+    document.getElementById('stock-text').textContent = `${stock.text}${product.stock_quantity > 0 ? ` — ${product.stock_quantity} units available` : ''}`;
+
+    const badge = document.getElementById('d-badge');
+    badge.textContent = stock.text;
+    badge.className = `badge ${stock.badge}`;
+
+    if (product.stock_quantity === 0) {
+      document.getElementById('order-section').innerHTML = `
+        <div style="padding:20px;background:var(--gray-dark);border:1px solid var(--gray-mid);text-align:center;color:var(--text-muted);">
+          <div style="font-size:1.5rem;margin-bottom:8px;">⚔</div>
+          <div style="font-weight:600;margin-bottom:4px;">Currently Out of Stock</div>
+          <div style="font-size:13px;">Message us to join the waitlist</div>
+          <a href="${FB_MESSENGER_URL}" target="_blank" class="messenger-cta" style="margin-top:16px;display:flex;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.822 1.337 5.345 3.443 7.038V22l3.145-1.727A10.98 10.98 0 0 0 12 20.485c5.523 0 10-4.144 10-9.242C22 6.145 17.523 2 12 2zm1.033 12.432L10.69 11.82l-4.595 2.61 5.052-5.378 2.393 2.612 4.543-2.612-5.05 5.38z"/></svg>
+            Join Waitlist via FB Messenger
+          </a>
+        </div>
+      `;
+    } else {
+      updateMessengerLink();
+    }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('product-detail').style.display = 'block';
+
+    // Related items
+    const { data: related } = await API.getRelated(product.id, product.category);
+    if (related && related.length > 0) {
+      document.getElementById('related-section').style.display = 'block';
+      document.getElementById('related-grid').innerHTML = related.map(p => {
+        const st = Utils.stockStatus(p.stock_quantity);
+        return `
+          <div class="product-card" onclick="location.href='item-detail.html?id=${p.id}'">
+            <div class="product-card-img">
+              <img src="${p.image_url}" alt="${p.name}" loading="lazy">
+            </div>
+            <div class="product-card-body">
+              <div class="product-card-cat">${p.category}</div>
+              <div class="product-card-name">${p.name}</div>
+              <div class="product-card-footer">
+                <span class="product-card-price">${Utils.formatPrice(p.price)}</span>
+                <span class="badge ${st.badge}">${st.text}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  function showNotFound() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('not-found').style.display = 'block';
+  }
+
+  loadProduct();
+</script>
+</body>
+</html>

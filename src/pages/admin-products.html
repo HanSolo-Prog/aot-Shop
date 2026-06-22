@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — AOT Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="../styles/globals.css">
+</head>
+<body>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-logo">
+      <div class="logo-text">AOT ADMIN</div>
+      <div class="logo-sub">Control Panel</div>
+    </div>
+    <nav>
+      <a href="admin-dashboard.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="admin-products.html" class="admin-nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+        Products
+      </a>
+      <a href="admin-stock.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+        Stock
+      </a>
+      <a href="admin-orders.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Orders
+      </a>
+      <div style="height:1px;background:var(--gray-mid);margin:16px 0;"></div>
+      <a href="index.html" class="admin-nav-item" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Store
+      </a>
+      <button class="admin-nav-item" onclick="API.adminLogout();location.href='admin-login.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Products</h1>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:4px;">Manage your product catalog</p>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div class="search-wrap" style="position:relative;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" class="input" id="search" placeholder="Search products..." style="padding-left:40px;width:220px;" oninput="filterTable()">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add Product</button>
+      </div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--gray-mid);margin-bottom:24px;">
+      <button class="filter-tab active" onclick="setTab('all',this)" data-tab="all" style="padding:10px 20px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);border-bottom:2px solid var(--gold);background:none;transition:all 0.2s;">All</button>
+      <button class="filter-tab" onclick="setTab('Apparel',this)" data-tab="Apparel" style="padding:10px 20px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);border-bottom:2px solid transparent;background:none;transition:all 0.2s;">Apparel</button>
+      <button class="filter-tab" onclick="setTab('Merch',this)" data-tab="Merch" style="padding:10px 20px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);border-bottom:2px solid transparent;background:none;transition:all 0.2s;">Merch</button>
+      <button class="filter-tab" onclick="setTab('Accessories',this)" data-tab="Accessories" style="padding:10px 20px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);border-bottom:2px solid transparent;background:none;transition:all 0.2s;">Accessories</button>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="products-tbody">
+          <tr><td colspan="6"><div class="skeleton" style="height:44px;margin:4px 0"></div></td></tr>
+          <tr><td colspan="6"><div class="skeleton" style="height:44px;margin:4px 0"></div></td></tr>
+          <tr><td colspan="6"><div class="skeleton" style="height:44px;margin:4px 0"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="table-count" style="font-size:12px;color:var(--text-muted);margin-top:12px;"></div>
+  </main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="modal" style="display:none;" onclick="closeOnBackdrop(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Product</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label class="label">Product Name *</label>
+        <input type="text" class="input" id="f-name" placeholder="e.g., Survey Corps Hoodie">
+      </div>
+      <div class="form-group">
+        <label class="label">Category *</label>
+        <select class="input select" id="f-category">
+          <option value="">Select...</option>
+          <option value="Merch">Merch</option>
+          <option value="Apparel">Apparel</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="label">Price (₱) *</label>
+        <input type="number" class="input" id="f-price" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label class="label">Stock Quantity</label>
+        <input type="number" class="input" id="f-stock" placeholder="0" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="label">Status</label>
+        <select class="input select" id="f-status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="coming_soon">Coming Soon</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="label">Image URL</label>
+        <input type="url" class="input" id="f-image" placeholder="https://...">
+      </div>
+      <div class="form-group full">
+        <label class="label">Description</label>
+        <textarea class="input textarea" id="f-desc" rows="3" placeholder="Product description..." style="resize:vertical;"></textarea>
+      </div>
+      <div class="form-group full">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="f-featured" style="accent-color:var(--gold);width:15px;height:15px;">
+          <span class="label" style="margin:0;">Show on Homepage (Featured)</span>
+        </label>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="modal-save-btn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="modal-overlay" id="delete-modal" style="display:none;" onclick="if(event.target===this)closeDeleteModal()">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <h3>Delete Product</h3>
+      <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+    </div>
+    <p style="color:var(--text-dim);font-size:14px;margin-bottom:24px;">Are you sure you want to delete <strong id="delete-name" style="color:var(--text)"></strong>? This cannot be undone.</p>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="../config/supabase.js"></script>
+<script>
+  if (!Utils.requireAdmin()) {}
+
+  let products = [];
+  let editingId = null;
+  let deletingId = null;
+  let activeTab = 'all';
+
+  async function loadProducts() {
+    const { data } = await API.getProducts();
+    products = data || [];
+    renderTable();
+  }
+
+  function setTab(tab, el) {
+    activeTab = tab;
+    document.querySelectorAll('.filter-tab').forEach(t => {
+      t.style.color = 'var(--text-muted)';
+      t.style.borderBottomColor = 'transparent';
+    });
+    el.style.color = 'var(--gold)';
+    el.style.borderBottomColor = 'var(--gold)';
+    renderTable();
+  }
+
+  function filterTable() { renderTable(); }
+
+  function renderTable() {
+    const search = document.getElementById('search').value.toLowerCase();
+    let filtered = products.filter(p => {
+      const matchTab = activeTab === 'all' || p.category === activeTab;
+      const matchSearch = !search || p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search);
+      return matchTab && matchSearch;
+    });
+
+    document.getElementById('table-count').textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
+
+    const tbody = document.getElementById('products-tbody');
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state" style="padding:40px;"><div>No products found</div></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(p => {
+      const stock = Utils.stockStatus(p.stock_quantity);
+      const statusColor = Utils.statusColor(p.status);
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <img src="${p.image_url}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border:1px solid var(--gray-mid);flex-shrink:0;">
+              <div>
+                <div style="font-weight:500;font-size:13px;">${p.name}</div>
+                <div style="font-size:11px;color:var(--text-muted);">ID: ${p.id}</div>
+              </div>
+            </div>
+          </td>
+          <td><span style="font-size:12px;color:var(--text-dim);">${p.category}</span></td>
+          <td><span style="font-family:var(--font-mono);color:var(--gold);font-size:13px;">${Utils.formatPrice(p.price)}</span></td>
+          <td><span class="badge ${stock.badge}">${stock.text}</span></td>
+          <td>
+            <span style="font-size:11px;padding:3px 10px;background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor}44;letter-spacing:0.08em;text-transform:uppercase;">${p.status}</span>
+          </td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-ghost btn-sm" onclick="openEdit('${p.id}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="openDelete('${p.id}','${p.name.replace(/'/g,"\\'")}')">Del</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function openModal(id) {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'Add Product';
+    document.getElementById('modal-save-btn').textContent = 'Add Product';
+    ['f-name','f-category','f-price','f-stock','f-image','f-desc'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = el.tagName === 'SELECT' ? '' : (id === 'f-stock' ? '0' : '');
+    });
+    document.getElementById('f-status').value = 'active';
+    document.getElementById('f-featured').checked = false;
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function openEdit(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    editingId = id;
+    document.getElementById('modal-title').textContent = 'Edit Product';
+    document.getElementById('modal-save-btn').textContent = 'Save Changes';
+    document.getElementById('f-name').value = p.name;
+    document.getElementById('f-category').value = p.category;
+    document.getElementById('f-price').value = p.price;
+    document.getElementById('f-stock').value = p.stock_quantity;
+    document.getElementById('f-status').value = p.status;
+    document.getElementById('f-image').value = p.image_url || '';
+    document.getElementById('f-desc').value = p.description || '';
+    document.getElementById('f-featured').checked = p.featured || false;
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function closeModal() { document.getElementById('modal').style.display = 'none'; }
+  function closeOnBackdrop(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+  async function saveProduct() {
+    const name = document.getElementById('f-name').value.trim();
+    const category = document.getElementById('f-category').value;
+    const price = parseFloat(document.getElementById('f-price').value);
+    if (!name || !category || isNaN(price)) {
+      Utils.toast('Please fill in required fields.', 'error');
+      return;
+    }
+    const data = {
+      name,
+      category,
+      price,
+      stock_quantity: parseInt(document.getElementById('f-stock').value) || 0,
+      status: document.getElementById('f-status').value,
+      image_url: document.getElementById('f-image').value || 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80',
+      description: document.getElementById('f-desc').value,
+      featured: document.getElementById('f-featured').checked,
+    };
+
+    const btn = document.getElementById('modal-save-btn');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    if (editingId) {
+      await API.updateProduct(editingId, data);
+      Utils.toast('Product updated!', 'success');
+    } else {
+      await API.createProduct(data);
+      Utils.toast('Product added!', 'success');
+    }
+
+    btn.disabled = false;
+    closeModal();
+    loadProducts();
+  }
+
+  function openDelete(id, name) {
+    deletingId = id;
+    document.getElementById('delete-name').textContent = name;
+    document.getElementById('delete-modal').style.display = 'flex';
+  }
+  function closeDeleteModal() { document.getElementById('delete-modal').style.display = 'none'; }
+  async function confirmDelete() {
+    await API.deleteProduct(deletingId);
+    Utils.toast('Product deleted.', 'default');
+    closeDeleteModal();
+    loadProducts();
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>

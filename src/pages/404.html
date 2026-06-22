@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — AOT Revolution Store</title>
+  <link rel="stylesheet" href="../styles/globals.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; }
+    .err-code { font-family: var(--font-display); font-size: clamp(6rem, 20vw, 12rem); color: var(--gray-mid); line-height: 1; margin-bottom: 0; }
+    .err-title { font-family: var(--font-display); font-size: 2rem; color: var(--gold); margin-bottom: 12px; }
+    .err-sub { color: var(--text-dim); font-size: 14px; max-width: 320px; margin: 0 auto 32px; }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="err-code">404</div>
+    <h1 class="err-title">Wall Breach Detected</h1>
+    <p class="err-sub">This page has been taken by the Titans. It doesn't exist or has been moved.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="index.html" class="btn btn-primary">← Back to Store</a>
+      <a href="items.html" class="btn btn-outline">Browse Items</a>
+    </div>
+  </div>
+  <script src="../config/supabase.js"></script>
+</body>
+</html>

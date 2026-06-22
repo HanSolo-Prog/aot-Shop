@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AOT Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="../styles/globals.css">
+  <style>
+    body { background: var(--black); }
+    .low-stock-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-mid); font-size: 13px; }
+    .low-stock-item:last-child { border-bottom: none; }
+    .low-stock-name { font-weight: 500; }
+    .activity-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--gray-mid); font-size: 13px; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .activity-text { color: var(--text-dim); line-height: 1.5; }
+    .activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-logo">
+      <div class="logo-text">AOT ADMIN</div>
+      <div class="logo-sub">Control Panel</div>
+    </div>
+    <nav>
+      <a href="admin-dashboard.html" class="admin-nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="admin-products.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+        Products
+      </a>
+      <a href="admin-stock.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+        Stock
+      </a>
+      <a href="admin-orders.html" class="admin-nav-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Orders
+      </a>
+      <div style="height:1px;background:var(--gray-mid);margin:16px 0;"></div>
+      <a href="index.html" class="admin-nav-item" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Store
+      </a>
+      <button class="admin-nav-item" onclick="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Dashboard</h1>
+        <p style="color:var(--text-muted);font-size:13px;margin-top:4px;">Overview of your store</p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <span style="font-size:12px;color:var(--text-muted);">Logged in as <strong style="color:var(--gold)" id="admin-email">admin</strong></span>
+        <a href="admin-products.html" class="btn btn-primary btn-sm">+ Add Product</a>
+      </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="admin-stat-cards" id="stat-cards">
+      <div class="admin-stat-card">
+        <div class="admin-stat-card-label">Total Products</div>
+        <div class="admin-stat-card-value" id="stat-total">—</div>
+        <div class="admin-stat-card-sub">Active listings</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-card-label">Low Stock Alerts</div>
+        <div class="admin-stat-card-value" id="stat-low" style="color:var(--warning)">—</div>
+        <div class="admin-stat-card-sub">Items with &lt;5 units</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-card-label">Out of Stock</div>
+        <div class="admin-stat-card-value" id="stat-out" style="color:var(--danger)">—</div>
+        <div class="admin-stat-card-sub">Need restocking</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-card-label">Pending Orders</div>
+        <div class="admin-stat-card-value" id="stat-orders" style="color:var(--gold)">—</div>
+        <div class="admin-stat-card-sub">Need attention</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <!-- LOW STOCK -->
+      <div style="background:var(--gray-dark);border:1px solid var(--gray-mid);padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 style="font-size:1rem;">Low Stock Items</h3>
+          <a href="admin-stock.html" class="btn btn-ghost btn-sm">Manage →</a>
+        </div>
+        <div id="low-stock-list">
+          <div class="skeleton" style="height:40px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:40px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:40px"></div>
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS -->
+      <div style="background:var(--gray-dark);border:1px solid var(--gray-mid);padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 style="font-size:1rem;">Recent Orders</h3>
+          <a href="admin-orders.html" class="btn btn-ghost btn-sm">View All →</a>
+        </div>
+        <div id="recent-orders">
+          <div class="skeleton" style="height:40px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:40px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:40px"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="../config/supabase.js"></script>
+<script>
+  if (!Utils.requireAdmin()) {}
+
+  const admin = API.getAdmin();
+  if (admin) document.getElementById('admin-email').textContent = admin.email;
+
+  function logout() {
+    API.adminLogout();
+    location.href = 'admin-login.html';
+  }
+
+  async function loadDashboard() {
+    const [productsRes, ordersRes] = await Promise.all([
+      API.getProducts(),
+      API.getOrders(),
+    ]);
+
+    const products = productsRes.data || [];
+    const orders = ordersRes.data || [];
+
+    const lowStock = products.filter(p => p.stock_quantity > 0 && p.stock_quantity <= 5);
+    const outOfStock = products.filter(p => p.stock_quantity === 0);
+    const pendingOrders = orders.filter(o => o.status === 'pending');
+
+    document.getElementById('stat-total').textContent = products.length;
+    document.getElementById('stat-low').textContent = lowStock.length;
+    document.getElementById('stat-out').textContent = outOfStock.length;
+    document.getElementById('stat-orders').textContent = pendingOrders.length;
+
+    // Low stock list
+    const lowEl = document.getElementById('low-stock-list');
+    if (lowStock.length === 0 && outOfStock.length === 0) {
+      lowEl.innerHTML = '<div style="color:var(--success);font-size:13px;padding:12px 0;">✓ All items are well-stocked</div>';
+    } else {
+      const items = [...outOfStock, ...lowStock].slice(0, 6);
+      lowEl.innerHTML = items.map(p => {
+        const stock = Utils.stockStatus(p.stock_quantity);
+        return `
+          <div class="low-stock-item">
+            <div>
+              <div class="low-stock-name">${p.name}</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${p.category}</div>
+            </div>
+            <span class="badge ${stock.badge}">${stock.text}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Recent orders
+    const ordersEl = document.getElementById('recent-orders');
+    const recent = orders.slice(0, 5);
+    if (recent.length === 0) {
+      ordersEl.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:12px 0;">No orders yet</div>';
+    } else {
+      ordersEl.innerHTML = recent.map(o => `
+        <div class="low-stock-item">
+          <div>
+            <div class="low-stock-name">${o.customer_name}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${o.product?.name || 'Unknown'} × ${o.quantity}</div>
+          </div>
+          <span style="font-size:11px;padding:4px 10px;background:${Utils.statusColor(o.status)}22;color:${Utils.statusColor(o.status)};border:1px solid ${Utils.statusColor(o.status)}44;text-transform:uppercase;letter-spacing:0.08em;">${o.status}</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  loadDashboard();
+</script>
+</body>
+</html>
