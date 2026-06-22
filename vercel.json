@@ -1,19 +1,8 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/items", "destination": "items.html" },
-    { "source": "/items/:id", "destination": "item-detail.html" },
-    { "source": "/admin", "destination": "admin-login.html" },
-    { "source": "/admin/dashboard", "destination": "admin-dashboard.html" },
-    { "source": "/admin/products", "destination": "admin-products.html" },
-    { "source": "/admin/stock", "destination": "admin-stock.html" },
-    { "source": "/admin/orders", "destination": "admin-orders.html" }
-  ],
-    "headers": [
-      {
-        "source": "/admin-(.*)",
-        "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
-      }
-    ]
-  }
+  "headers": [
+    {
+      "source": "/admin-(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
+}
