@@ -11,7 +11,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/src/pages/404.html"
+      "dest": "/src/index.html"
     }
   ],
   "rewrites": [
