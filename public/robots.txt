@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /admin/
 Disallow: /admin-*
 
-Sitemap: https://aot-shop.vercel.app/sitemap.xml
+Sitemap: https://aot-shop.vercel.app
