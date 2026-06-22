@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Login — AOT Store</title>
   <meta name="robots" content="noindex,nofollow">
-  <link rel="stylesheet" href="../styles/globals.css">
+  <link rel="stylesheet" href="globals.css">
   <style>
     body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     .login-wrap {
@@ -69,10 +69,11 @@
 </div>
 
 <div id="toast-container" class="toast-container"></div>
-<script src="../config/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase.js"></script>
 <script>
   // Redirect if already logged in
-  if (API.getAdmin()) location.href = 'admin-dashboard.html';
+  if (API.getAdmin()) location.href = '/admin-dashboard.html';
 
   document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
@@ -98,7 +99,7 @@
       btn.disabled = false;
     } else {
       btn.textContent = 'Success!';
-      setTimeout(() => location.href = 'admin-dashboard.html', 400);
+      setTimeout(() => location.href = '/admin-dashboard.html', 400);
     }
   }
 

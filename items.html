@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Items — AOT Revolution Store</title>
-  <link rel="stylesheet" href="../styles/globals.css">
+  <link rel="stylesheet" href="globals.css">
   <style>
     .page-top {
       padding-top: calc(var(--nav-h) + 48px);
@@ -205,7 +205,8 @@
 
 <div id="toast-container" class="toast-container"></div>
 
-<script src="../config/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase.js"></script>
 <script>
   const ITEMS_PER_PAGE = 12;
   let currentPage = 1;

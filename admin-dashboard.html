@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — AOT Admin</title>
   <meta name="robots" content="noindex,nofollow">
-  <link rel="stylesheet" href="../styles/globals.css">
+  <link rel="stylesheet" href="globals.css">
   <style>
     body { background: var(--black); }
     .low-stock-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-mid); font-size: 13px; }
@@ -124,7 +124,8 @@
 </div>
 
 <div id="toast-container" class="toast-container"></div>
-<script src="../config/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase.js"></script>
 <script>
   if (!Utils.requireAdmin()) {}
 
@@ -133,7 +134,7 @@
 
   function logout() {
     API.adminLogout();
-    location.href = 'admin-login.html';
+    location.href = '/admin-login.html';
   }
 
   async function loadDashboard() {
